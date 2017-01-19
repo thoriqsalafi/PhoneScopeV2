@@ -99,7 +99,7 @@ public class ledButton extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rInt.setText("Int: " + Integer.toString(progress));
+                rInt.setText("Red Intensity: " + Integer.toString(progress));
                 setIntensity("RED", rSeek.getProgress());
             }
 

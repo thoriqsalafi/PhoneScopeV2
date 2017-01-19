@@ -36,7 +36,12 @@
             android:name=".ledButton"
             android:label="@string/title_activity_led_button" />
         <activity android:name=".capturecamera" />
-        <activity android:name=".capturevideo"></activity>
+        <activity android:name=".capturevideo" />
+        <activity
+            android:name=".processing"
+            android:label="@string/title_activity_processing" />
+        <activity android:name=".flowCountActivity" />
+        <activity android:name=".videoActivity"></activity>
     </application>
 
 </manifest>

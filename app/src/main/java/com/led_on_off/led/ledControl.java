@@ -68,8 +68,14 @@ public class ledControl extends ActionBarActivity {
         });
 
         capturevideo.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+            Intent i = new Intent(ledControl.this, capturevideo.class);
+            startActivity(i);
+        }
+    });
+        processing.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent i = new Intent(ledControl.this, capturevideo.class);
+                Intent i = new Intent(ledControl.this, processing.class);
                 startActivity(i);
             }
         });
@@ -125,15 +131,6 @@ public class ledControl extends ActionBarActivity {
     private void msg(String s)
     {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-    }
-
-    public  void about(View v)
-    {
-        if(v.getId() == R.id.abt)
-        {
-            Intent i = new Intent(this, AboutActivity.class);
-            startActivity(i);
-        }
     }
 
     public  void controllerLED(View v)
