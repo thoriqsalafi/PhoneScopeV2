@@ -2,6 +2,7 @@ package com.led_on_off.led;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -23,13 +26,17 @@ import java.util.UUID;
 public class ledButton extends ActionBarActivity {
 
     // Button btnOn, btnOff, btnDis;
-    ImageButton On, Off, Discnt, Abt;
+    private static final String TAG = "your activity name";
+    ImageButton On, Off, Discnt;
+    private final int MAX_VALUE_SEEK = 255;
     Button controlLED, captureimage, capturevideo, processing;
     String address = null;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
+    private SeekBar rSeek;
+    private TextView rInt;
     //SPP UUID. Look for it
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -48,11 +55,16 @@ public class ledButton extends ActionBarActivity {
         On = (ImageButton)findViewById(R.id.on);
         Off = (ImageButton)findViewById(R.id.off);
         Discnt = (ImageButton)findViewById(R.id.discnt);
-        Abt = (ImageButton)findViewById(R.id.abt);
         controlLED = (Button)findViewById(R.id.controlLED);
         capturevideo = (Button)findViewById(R.id.videocapture);
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
+        rSeek = (SeekBar) findViewById(R.id.rSeek);
+        rInt = (TextView) findViewById(R.id.redInten);
+
+        rSeek.setMax(MAX_VALUE_SEEK);
+        rSeek.setProgress(rSeek.getMax());
+
 
         new ConnectBT().execute(); //Call the class to connect
 
@@ -83,7 +95,42 @@ public class ledButton extends ActionBarActivity {
             }
         });
 
+        rSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                rInt.setText("Int: " + Integer.toString(progress));
+                setIntensity("RED", rSeek.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+
+    }
+
+    private void setIntensity(String led, int intensity) {
+        if (btSocket != null) {
+            try {
+                // Create the command that will be sent to arduino.
+                String value = "#" + led.toUpperCase() + " " + intensity + ":";
+                Log.d(TAG, value);
+
+                // String must be converted in its bytes to be sent on serial
+                // communication
+                btSocket.getOutputStream().write(value.getBytes());
+            } catch (IOException e) {
+                msg("Error");
+            }
+        }
     }
 
     private void Disconnect()
@@ -137,14 +184,6 @@ public class ledButton extends ActionBarActivity {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
     }
 
-    public  void about(View v)
-    {
-        if(v.getId() == R.id.abt)
-        {
-            Intent i = new Intent(this, AboutActivity.class);
-            startActivity(i);
-        }
-    }
 
     public  void contro(View v)
     {
