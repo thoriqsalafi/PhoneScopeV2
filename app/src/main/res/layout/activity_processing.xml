@@ -22,6 +22,16 @@
             android:text="flow count"
             android:id="@+id/flowcount_button"
             android:onClick="flowCount"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             />
 
         <Button
@@ -30,7 +40,16 @@
             android:layout_gravity="center_horizontal"
             android:text="video test"
             android:id="@+id/video_button"
-            android:onClick="videoTest"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             />
     </LinearLayout>
 
