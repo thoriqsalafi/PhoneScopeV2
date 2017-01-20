@@ -68,11 +68,8 @@ public class ledButton extends ActionBarActivity {
         bInt = (TextView) findViewById(R.id.blueInten);
 
         rSeek.setMax(MAX_VALUE_SEEK);
-        rSeek.setProgress(rSeek.getMax());
         gSeek.setMax(MAX_VALUE_SEEK);
-        gSeek.setProgress(rSeek.getMax());
         bSeek.setMax(MAX_VALUE_SEEK);
-        bSeek.setProgress(rSeek.getMax());
 
         new ConnectBT().execute(); //Call the class to connect
 
@@ -107,7 +104,7 @@ public class ledButton extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rInt.setText("Red Intensity: " + Integer.toString(progress));
+                rInt.setText("White Intensity: " + Integer.toString(progress*100/255) + "%");
                 setIntensity("RED", rSeek.getProgress());
             }
 
@@ -126,7 +123,7 @@ public class ledButton extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rInt.setText("green Intensity: " + Integer.toString(progress));
+                gInt.setText("Yellow Intensity: " + Integer.toString(progress*100/255) + "%");
                 setIntensity("GREEN", gSeek.getProgress());
             }
 
@@ -145,7 +142,7 @@ public class ledButton extends ActionBarActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rInt.setText("blue Intensity: " + Integer.toString(progress));
+                bInt.setText("Blue Intensity: " + Integer.toString(progress*100/255) + "%");
                 setIntensity("BLUE", gSeek.getProgress());
             }
 
