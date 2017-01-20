@@ -35,8 +35,8 @@ public class ledButton extends ActionBarActivity {
     BluetoothAdapter myBluetooth = null;
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
-    private SeekBar rSeek;
-    private TextView rInt;
+    private SeekBar rSeek, gSeek, bSeek;
+    private TextView rInt, gInt, bInt;
     //SPP UUID. Look for it
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -60,11 +60,19 @@ public class ledButton extends ActionBarActivity {
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
         rSeek = (SeekBar) findViewById(R.id.rSeek);
+        gSeek = (SeekBar) findViewById(R.id.gSeek);
+        bSeek = (SeekBar) findViewById(R.id.bSeek);
+
         rInt = (TextView) findViewById(R.id.redInten);
+        gInt = (TextView) findViewById(R.id.greenInten);
+        bInt = (TextView) findViewById(R.id.blueInten);
 
         rSeek.setMax(MAX_VALUE_SEEK);
         rSeek.setProgress(rSeek.getMax());
-
+        gSeek.setMax(MAX_VALUE_SEEK);
+        gSeek.setProgress(rSeek.getMax());
+        bSeek.setMax(MAX_VALUE_SEEK);
+        bSeek.setProgress(rSeek.getMax());
 
         new ConnectBT().execute(); //Call the class to connect
 
@@ -101,6 +109,44 @@ public class ledButton extends ActionBarActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 rInt.setText("Red Intensity: " + Integer.toString(progress));
                 setIntensity("RED", rSeek.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        gSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                rInt.setText("green Intensity: " + Integer.toString(progress));
+                setIntensity("GREEN", gSeek.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+
+        });
+
+        bSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                rInt.setText("blue Intensity: " + Integer.toString(progress));
+                setIntensity("BLUE", gSeek.getProgress());
             }
 
             @Override
