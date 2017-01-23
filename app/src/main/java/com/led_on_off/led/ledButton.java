@@ -19,8 +19,10 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.AsyncTask;
 
+
 import java.io.IOException;
 import java.util.UUID;
+
 
 
 public class ledButton extends ActionBarActivity {
@@ -100,6 +102,7 @@ public class ledButton extends ActionBarActivity {
             }
         });
 
+
         rSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -118,6 +121,8 @@ public class ledButton extends ActionBarActivity {
             }
 
         });
+
+
 
         gSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -143,7 +148,7 @@ public class ledButton extends ActionBarActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 bInt.setText("Blue Intensity: " + Integer.toString(progress*100/255) + "%");
-                setIntensity("BLUE", gSeek.getProgress());
+                setIntensity("BLUE", bSeek.getProgress());
             }
 
             @Override
@@ -159,6 +164,7 @@ public class ledButton extends ActionBarActivity {
 
 
     }
+
 
     private void setIntensity(String led, int intensity) {
         if (btSocket != null) {

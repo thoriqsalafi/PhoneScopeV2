@@ -109,6 +109,8 @@ public class capturecamera extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //Bitmap photoCapturedBitmap = BitmapFactory.decodeFile(mImageFileLocation);
         //imageview4.setImageBitmap(photoCapturedBitmap);
-        rotateImage(setReducedImageSize());
+        if(requestCode == CAM_REQUEST && resultCode == RESULT_OK) {
+            rotateImage(setReducedImageSize());
+        }
     }
 }
