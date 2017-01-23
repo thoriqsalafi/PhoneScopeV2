@@ -203,7 +203,7 @@ public class ledButton extends ActionBarActivity {
         {
             try
             {
-                btSocket.getOutputStream().write("0".toString().getBytes());
+                btSocket.getOutputStream().write("#0:".toString().getBytes());
             }
             catch (IOException e)
             {
@@ -218,7 +218,7 @@ public class ledButton extends ActionBarActivity {
         {
             try
             {
-                btSocket.getOutputStream().write("1".toString().getBytes());
+                btSocket.getOutputStream().write("#1:".toString().getBytes());
             }
             catch (IOException e)
             {

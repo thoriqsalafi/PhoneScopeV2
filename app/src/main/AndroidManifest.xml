@@ -41,7 +41,10 @@
             android:name=".processing"
             android:label="@string/title_activity_processing" />
         <activity android:name=".flowCountActivity" />
-        <activity android:name=".videoActivity"></activity>
+        <activity android:name=".videoActivity" />
+        <activity
+            android:name=".result_Activity"
+            android:label="@string/title_activity_result_"></activity>
     </application>
 
 </manifest>

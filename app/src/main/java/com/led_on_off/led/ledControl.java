@@ -24,7 +24,7 @@ public class ledControl extends ActionBarActivity {
 
    // Button btnOn, btnOff, btnDis;
     ImageButton On, Off, Discnt, Abt;
-    Button controlLED, captureimage, capturevideo, processing;
+    Button controlLED, captureimage, capturevideo, processing, resultbutton;
     String address = null;
     private ProgressDialog progress;
     BluetoothAdapter myBluetooth = null;
@@ -49,6 +49,7 @@ public class ledControl extends ActionBarActivity {
         capturevideo = (Button)findViewById(R.id.videocapture);
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
+        resultbutton = (Button)findViewById(R.id.resultbutton);
 
 
         controlLED.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +77,13 @@ public class ledControl extends ActionBarActivity {
         processing.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(ledControl.this, processing.class);
+                startActivity(i);
+            }
+        });
+
+        resultbutton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent i = new Intent(ledControl.this, result_Activity.class);
                 startActivity(i);
             }
         });

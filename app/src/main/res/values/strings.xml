@@ -7,4 +7,5 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_led_button">ledButton</string>
     <string name="title_activity_processing">processing</string>
+    <string name="title_activity_result_">result_Activity</string>
 </resources>

@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/textView2"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="220dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true">
 
@@ -112,6 +112,23 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"/>
+
+        <Button
+            android:text="Result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/resultbutton"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/buttonbackground"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
 
     </LinearLayout>
 
