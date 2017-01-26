@@ -7,6 +7,8 @@
     tools:context="com.led_on_off.led.ledControl"
     android:background="#3c3f41">
 
+
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -23,6 +25,7 @@
             android:layout_alignParentStart="true"
             android:textColor="#ffffff"
             android:textSize="20dp" />
+
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -49,9 +52,7 @@
                 android:layout_alignParentRight="true"
                 />
 
-
         </RelativeLayout>
-
 
         <TextView
             android:text="White Intensity"
@@ -59,16 +60,16 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/rSeek"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp"
             android:id="@+id/redInten" />
 
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="58dp"
             android:id="@+id/rSeek"
             style="@android:style/Widget.DeviceDefault.Light.SeekBar"
             android:layout_above="@+id/discnt"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             />
 
         <TextView
@@ -83,9 +84,10 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="58dp"
             android:id="@+id/gSeek"
             style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             />
 
         <TextView
@@ -100,9 +102,10 @@
         <SeekBar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="58dp"
             android:id="@+id/bSeek"
             style="@android:style/Widget.DeviceDefault.Light.SeekBar"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             />
 
         <ImageButton

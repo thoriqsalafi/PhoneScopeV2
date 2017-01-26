@@ -44,7 +44,7 @@
         <activity android:name=".videoActivity" />
         <activity
             android:name=".result_Activity"
-            android:label="@string/title_activity_result_"></activity>
+            android:label="@string/title_activity_result_" />
     </application>
 
 </manifest>

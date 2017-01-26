@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -39,10 +40,12 @@ public class ledButton extends ActionBarActivity {
     private boolean isBtConnected = false;
     private SeekBar rSeek, gSeek, bSeek;
     private TextView rInt, gInt, bInt;
-    private boolean autoIncrement = false;
-    private boolean autoDecrement = false;
-    private final long REPEAT_DELAY = 50;
-    private Handler repeatUpdateHandler = new Handler();
+  //  private boolean autoIncrement = false;
+  //  private boolean autoDecrement = false;
+  //  private final long REPEAT_DELAY = 50;
+  //  private Handler repeatUpdateHandler = new Handler();
+  //  Button upbutton, downbutton;
+
 
     //SPP UUID. Look for it
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -66,6 +69,9 @@ public class ledButton extends ActionBarActivity {
         capturevideo = (Button)findViewById(R.id.videocapture);
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
+      //  upbutton = (Button)findViewById(R.id.upbutton);
+      //  downbutton = (Button)findViewById(R.id.downbutton);
+
         rSeek = (SeekBar) findViewById(R.id.rSeek);
         gSeek = (SeekBar) findViewById(R.id.gSeek);
         bSeek = (SeekBar) findViewById(R.id.bSeek);
@@ -77,6 +83,21 @@ public class ledButton extends ActionBarActivity {
         rSeek.setMax(MAX_VALUE_SEEK);
         gSeek.setMax(MAX_VALUE_SEEK);
         bSeek.setMax(MAX_VALUE_SEEK);
+    /*    class RepetitiveUpdater implements Runnable {
+
+            @Override
+            public void run() {
+                if (autoIncrement) {
+                    increment();
+                    repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
+                } else if (autoDecrement) {
+                    decrement();
+                    repeatUpdateHandler.postDelayed(new RepetitiveUpdater(), REPEAT_DELAY);
+                }
+            }
+
+        }
+        */
 
         new ConnectBT().execute(); //Call the class to connect
 
@@ -166,7 +187,97 @@ public class ledButton extends ActionBarActivity {
             }
 
         });
+/*
+        upbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                increment();
+            }
+        });
 
+        upbutton.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                autoIncrement = true;
+                repeatUpdateHandler.post(new RepetitiveUpdater());
+                return false;
+            }
+        });
+
+        upbutton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP && autoIncrement) {
+                    autoIncrement = false;
+                }
+                return false;
+            }
+        });
+
+        downbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decrement();
+            }
+        });
+
+        downbutton.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                autoDecrement = true;
+                repeatUpdateHandler.post(new RepetitiveUpdater());
+                return false;
+            }
+        });
+
+        downbutton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP && autoDecrement) {
+                    autoDecrement = false;
+                }
+                return false;
+            }
+        });
+
+        */
+
+
+    }
+
+    public void increment() {
+        if (btSocket != null) {
+            try {
+                // Create the command that will be sent to arduino.
+                String value = "#" + "UP" + ":";
+                Log.d(TAG, value);
+
+                // String must be converted in its bytes to be sent on serial
+                // communication
+                btSocket.getOutputStream().write(value.getBytes());
+            } catch (IOException e) {
+                msg("Error");
+            }
+        }
+
+    }
+
+    public void decrement() {
+        if (btSocket != null) {
+            try {
+                // Create the command that will be sent to arduino.
+                String value = "#" + "DOWN" + ":";
+                Log.d(TAG, value);
+
+                // String must be converted in its bytes to be sent on serial
+                // communication
+                btSocket.getOutputStream().write(value.getBytes());
+            } catch (IOException e) {
+                msg("Error");
+            }
+        }
 
     }
 
