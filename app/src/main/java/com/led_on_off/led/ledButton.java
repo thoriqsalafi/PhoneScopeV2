@@ -1,5 +1,6 @@
 package com.led_on_off.led;
 
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.util.UUID;
 
 
-
 public class ledButton extends ActionBarActivity {
 
     // Button btnOn, btnOff, btnDis;
@@ -39,6 +39,11 @@ public class ledButton extends ActionBarActivity {
     private boolean isBtConnected = false;
     private SeekBar rSeek, gSeek, bSeek;
     private TextView rInt, gInt, bInt;
+    private boolean autoIncrement = false;
+    private boolean autoDecrement = false;
+    private final long REPEAT_DELAY = 50;
+    private Handler repeatUpdateHandler = new Handler();
+
     //SPP UUID. Look for it
     static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 

@@ -14,18 +14,15 @@ import android.widget.ToggleButton;
 import java.util.ArrayList;
 
 
-public class result_Activity extends Activity implements View.OnClickListener {
+public class result_Activity extends Activity {
 
-        private Button btnSeekTo;
         private CustomSeekBar seekbar;
-        private EditText txtSeekProgress;
-        private ToggleButton btnToogleSeek;
 
         private float totalSpan = 1500;
         private float redSpan = 200;
         private float blueSpan = 300;
         private float greenSpan = 400;
-        private float yellowSpan = 150;
+        private float yellowSpan = 300;
         private float darkGreySpan;
 
         private ArrayList<ProgressItem> progressItemList;
@@ -36,12 +33,8 @@ public class result_Activity extends Activity implements View.OnClickListener {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_result_);
             seekbar = ((CustomSeekBar) findViewById(R.id.seekBar0));
-            btnSeekTo = ((Button) findViewById(R.id.btnSeekTo));
-            btnToogleSeek = (ToggleButton) findViewById(R.id.btnToogleSeek);
-            txtSeekProgress = (EditText) findViewById(R.id.txtSeekProgress);
             initDataToSeekbar();
-            btnSeekTo.setOnClickListener(this);
-            btnToogleSeek.setOnClickListener(this);
+
         }
 
         private void initDataToSeekbar() {
@@ -49,13 +42,13 @@ public class result_Activity extends Activity implements View.OnClickListener {
             // red span
             mProgressItem = new ProgressItem();
             mProgressItem.progressItemPercentage = ((redSpan / totalSpan) * 100);
-            Log.i("Mainactivity", mProgressItem.progressItemPercentage + "");
+            Log.i("result activity", mProgressItem.progressItemPercentage + "");
             mProgressItem.color = R.color.red;
             progressItemList.add(mProgressItem);
             // blue span
             mProgressItem = new ProgressItem();
             mProgressItem.progressItemPercentage = (blueSpan / totalSpan) * 100;
-            mProgressItem.color = R.color.blue;
+            mProgressItem.color = R.color.yellow;
             progressItemList.add(mProgressItem);
             // green span
             mProgressItem = new ProgressItem();
@@ -70,7 +63,7 @@ public class result_Activity extends Activity implements View.OnClickListener {
             // greyspan
             mProgressItem = new ProgressItem();
             mProgressItem.progressItemPercentage = (darkGreySpan / totalSpan) * 100;
-            mProgressItem.color = R.color.grey;
+            mProgressItem.color = R.color.red;
             progressItemList.add(mProgressItem);
 
             seekbar.initData(progressItemList);
@@ -84,17 +77,5 @@ public class result_Activity extends Activity implements View.OnClickListener {
             return true;
         }
 
-        @Override
-        public void onClick(View v) {
-            // TODO Auto-generated method stub
-            if (v.getId() == R.id.btnSeekTo) {
-                String seekProgress = txtSeekProgress.getText().toString().trim();
-                if (seekProgress.length() > 0) {
-                    seekbar.setProgress(Integer.valueOf(seekProgress));
-                }
-            } else {
-                seekbar.setEnabled(btnToogleSeek.isChecked());
-            }
-        }
     }
 
