@@ -65,7 +65,6 @@ public class ledButton extends ActionBarActivity {
         On = (ImageButton)findViewById(R.id.on);
         Off = (ImageButton)findViewById(R.id.off);
         Discnt = (ImageButton)findViewById(R.id.discnt);
-        controlLED = (Button)findViewById(R.id.controlLED);
         capturevideo = (Button)findViewById(R.id.videocapture);
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
@@ -347,16 +346,6 @@ public class ledButton extends ActionBarActivity {
     private void msg(String s)
     {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-    }
-
-
-    public  void contro(View v)
-    {
-        if(v.getId() == R.id.controlLED)
-        {
-            Intent i = new Intent(this, ledButton.class);
-            startActivity(i);
-        }
     }
 
 

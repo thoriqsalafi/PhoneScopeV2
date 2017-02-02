@@ -45,21 +45,11 @@ public class ledControl extends ActionBarActivity {
         //view of the ledControl
         setContentView(R.layout.activity_led_control);
 
-        controlLED = (Button)findViewById(R.id.controlLED);
         capturevideo = (Button)findViewById(R.id.videocapture);
         captureimage = (Button)findViewById(R.id.imagecapture);
         processing = (Button)findViewById(R.id.processing);
         resultbutton = (Button)findViewById(R.id.resultbutton);
 
-
-        controlLED.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent i = new Intent(ledControl.this, ledButton.class);
-                i.putExtra(EXTRA_ADDRESS, address); //this will be received at ledControl (class) Activity
-                startActivity(i);
-            }
-
-        });
 
         captureimage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -140,17 +130,6 @@ public class ledControl extends ActionBarActivity {
     {
         Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
     }
-
-    public  void controllerLED(View v)
-    {
-        if(v.getId() == R.id.controlLED)
-        {
-            Intent i = new Intent(this, ledButton.class);
-            i.putExtra(EXTRA_ADDRESS, address); //this will be received at ledControl (class) Activity
-            startActivity(i);
-        }
-    }
-
 
 
     @Override
