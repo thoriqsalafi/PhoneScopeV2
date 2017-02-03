@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.led.led_on_off"
-        minSdkVersion 19
+        minSdkVersion 8
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

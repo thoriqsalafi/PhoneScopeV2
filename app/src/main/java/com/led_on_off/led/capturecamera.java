@@ -1,6 +1,7 @@
 package com.led_on_off.led;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +25,7 @@ import java.util.Date;
 public class capturecamera extends Activity {
     Button button;
     ImageView imageview4;
-    static final int CAM_REQUEST = 1;
+    static final int CAM_REQUEST = 0;
     private String mImageFileLocation = "";
 
     @Override
@@ -37,15 +38,17 @@ public class capturecamera extends Activity {
         button.setOnClickListener(new View.OnClickListener()   {
             public void onClick(View v)
             {
-                Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                Intent callCameraApplicationIntent = new Intent();
+                callCameraApplicationIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
                 File photoFile = null;
                 try {
                     photoFile = createImageFile();
                 } catch(IOException e) {
                     e.printStackTrace();
                 }
-                camera_intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-                startActivityForResult(camera_intent, CAM_REQUEST);
+                callCameraApplicationIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+                startActivityForResult(callCameraApplicationIntent, CAM_REQUEST);
 
             }
         });
@@ -55,7 +58,9 @@ public class capturecamera extends Activity {
     File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "IMAGE_" + timeStamp + "_";
-        File StorageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File StorageDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/");
+        if (!StorageDirectory.exists())
+            StorageDirectory.mkdirs();
         File image = File.createTempFile(imageFileName,".jpg", StorageDirectory);
         mImageFileLocation = image.getAbsolutePath();
 
@@ -110,7 +115,16 @@ public class capturecamera extends Activity {
         //Bitmap photoCapturedBitmap = BitmapFactory.decodeFile(mImageFileLocation);
         //imageview4.setImageBitmap(photoCapturedBitmap);
         if(requestCode == CAM_REQUEST && resultCode == RESULT_OK) {
+            addPicToGallery(this,mImageFileLocation);
             rotateImage(setReducedImageSize());
         }
+    }
+
+    public static void addPicToGallery(Context context, String photoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(photoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 }
