@@ -1,12 +1,14 @@
 package com.led_on_off.led;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 public class flowCountActivity extends ActionBarActivity {
+
     //Declare fields
     private final static String TAG = "Activity::FlowCount";    //Tag for logging purposes
     private File imgFile;   //Directory for the app
@@ -51,29 +54,36 @@ public class flowCountActivity extends ActionBarActivity {
 
     ImageView imageView;    //ImageView to display any images or videos
     TextView outputText;    //TextView for title text at the top
+    TextView debugText;     //TextView for debugging, like showing parameters
     Button saveButton;  //Save button that appears once it's time to save the result
+    Button recountButton;   //Button to re-analyse the consolidated image
     Mat combinedMat;    //Matrix to store the combined imaged to be further tested
+    SharedPreferences sharedPref;
 
     private static final int PROCESS_INCOMPLETE = 0;
     private static final int IMG_UPDATE = 1;
     private static final int TEXT_UPDATE = 2;
     private static final int COMBINE_FRAME = 3;
     private static final int FRAMES_DECODED = 4;
+    private static final int DEBUG_MSG = 5;
     private String outputFileName;
 
-    private static int minResult = 25;  //Minimum result to save
+    private static int minResult = 40;  //Minimum result to save
+    //private static int binNum = 1;  //Number of rows of pixels to combine
+    private boolean loopFlag = false;    //Whether to loop to optimise
+    private static boolean debugFlag = true;    //Whether to show debug views
 
     //Configurations for optimization loops
     private static int[] blobThresh = {
             5,  //Threshold step
-            90,    //Lowest min threshold
-            120,    //Lowest max threshold
-            120     //Highest max threshold
+            5,    //Lowest min threshold
+            250,    //Lowest max threshold
+            250     //Highest max threshold
     };
 
     private static int[] blobArea = {
             15, //Lowest max area
-            30  //Highest max area
+            60  //Highest max area
     };
 
     private static int[] blobRepeatability = {
@@ -85,6 +95,9 @@ public class flowCountActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flow_count);
+
+        //Start fragment
+        getFragmentManager().beginTransaction().replace(R.id.pFragment,new ParametersFragment()).commit();
 
         //Get image URI from previous intent
         Intent prevIntent = getIntent();
@@ -98,12 +111,18 @@ public class flowCountActivity extends ActionBarActivity {
 
         //Create necessary directories
         imgFile.mkdirs();
-        //resultsFile.mkdirs();
 
         //Set ImageView and TextView
         imageView = (ImageView) findViewById(R.id.resultsImgView);
         outputText = (TextView) findViewById(R.id.resultsTextView);
+        debugText = (TextView) findViewById(R.id.debugParams);
         saveButton = (Button) findViewById(R.id.saveButton);
+        recountButton = (Button) findViewById(R.id.recountButton) ;
+
+        //Show debug views if debugFlag is true
+        if(debugFlag){
+            debugText.setVisibility(View.VISIBLE);
+        }
 
         //Create new matrix to hold consolidated image
         combinedMat = new Mat();
@@ -160,14 +179,34 @@ public class flowCountActivity extends ActionBarActivity {
             }
             //Run blob detection
             else if(msg.what == FRAMES_DECODED){
+                //Update loop flag
+                sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                loopFlag = sharedPref.getBoolean("s_loopflag",false);
+
                 //Run blob detector
-                processVideo(combinedMat,true); //True for loop, false for one-time
+                processVideo(combinedMat,loopFlag,false); //True for loop, false for one-time
+
+                //Set recount button to be visible after completion
+                recountButton.setVisibility(View.VISIBLE);
+
+                //Set save image button to be visible if not looping
+                if(!loopFlag) {
+                    saveButton.setVisibility(View.VISIBLE);
+                }
+            }
+            //Update debugParams text view
+            else if(msg.what == DEBUG_MSG){
+                //Get string from message
+                String textUpdate = (String) msg.obj;
+
+                //Set the string to text view
+                debugText.setText(textUpdate);
             }
         }
     };
 
-    //Function to scan all frames and count cells
-    public void processVideo(final Mat testMat, final boolean loopFlag){
+    //Method to scan all frames and count cells
+    public void processVideo(final Mat testMat, final boolean loopFlag, final boolean recountFlag){
         //Create a runnable for a new thread
         Runnable processRun = new Runnable() {
             @Override
@@ -183,11 +222,14 @@ public class flowCountActivity extends ActionBarActivity {
                 //Declare messages
                 Message resultMsg;
                 Message textMsg;
+                Message debugMsg;
 
-                //Covert image to 8-bit grayscale for analysis
-                //Use different conversion depending on the number of channels (usually 3)
-                int colorChannels = (testMat.channels() == 3) ? Imgproc.COLOR_BGR2GRAY : ((testMat.channels() == 4) ? Imgproc.COLOR_BGRA2GRAY : 1);
-                Imgproc.cvtColor(testMat,testMat,colorChannels);
+                //Covert image to 8-bit grayscale for analysis if not a recount
+                if (!recountFlag) {
+                    //Use different conversion depending on the number of channels (usually 3)
+                    int colorChannels = (testMat.channels() == 3) ? Imgproc.COLOR_BGR2GRAY : ((testMat.channels() == 4) ? Imgproc.COLOR_BGRA2GRAY : 1);
+                    Imgproc.cvtColor(testMat, testMat, colorChannels);
+                }
 
                 //Setup a simple blob detector
                 detector = FeatureDetector.create(FeatureDetector.SIMPLEBLOB);
@@ -220,10 +262,10 @@ public class flowCountActivity extends ActionBarActivity {
                     int maxCount = 0;
 
                     //Loop through pixel max threshold
-                    for(int minThresh = blobThresh[1]; minThresh <= blobThresh[2]; minThresh++) {
+                    for(int minThresh = blobThresh[1]; minThresh <= blobThresh[2]; minThresh += blobThresh[0]) {
                         for (int maxThresh = blobThresh[2]; maxThresh <= blobThresh[3]; maxThresh++) {
                             //Loop through blob max area
-                            for (int maxBArea = blobArea[0]; maxBArea <= blobArea[1]; maxBArea++) {
+                            for (int maxBArea = blobArea[0]; maxBArea <= blobArea[1]; maxBArea += 5) {
                                 //Loop through minimum repeatability
                                 for (int minRepeat = blobRepeatability[0]; minRepeat <= blobRepeatability[1]; minRepeat++) {
                                     //Write parameters
@@ -234,6 +276,13 @@ public class flowCountActivity extends ActionBarActivity {
                                     detector.detect(testMat, keypoints);
                                     //Log parameters
                                     Log.d(TAG, "Detected for minTresh " + minThresh + ", maxThresh " + maxThresh + ", maxBArea " + maxBArea + ", repeatability " + minRepeat);
+
+                                    //Update debugText if debugFlag is true
+                                    if(debugFlag){
+                                        textUpdate = "tStep: " + blobThresh[0] + ", minT: " + minThresh + ", maxT: " + maxThresh + ", minR: " + minRepeat + ", area: " + maxBArea;
+                                        debugMsg = handler.obtainMessage(DEBUG_MSG,textUpdate);
+                                        debugMsg.sendToTarget();
+                                    }
 
                                     //Draw new image with keypoints
                                     outImg = testMat.clone();
@@ -256,20 +305,19 @@ public class flowCountActivity extends ActionBarActivity {
                                             //Add error log if failed to save
                                             Log.e(TAG, "Failed to save results for _minT" + minThresh + "_maxT" + maxThresh + "_A" + maxBArea + "_R" + minRepeat + ".png");
                                         }
-
-
-                                        //Record data into data array
-                                        //Min thresh, max thresh, max blob area, min repeatability, cell count
-                                        testData.add(new String[]{Double.toString(minThresh), Double.toString(maxThresh), Double.toString(maxBArea), Integer.toString(minRepeat), Integer.toString(cellCount)});
-
-                                        //Update loop count
-                                        loopCount += 1;
-
-                                        //Update UI
-                                        textUpdate = "Processing Iteration: " + loopCount;
-                                        textMsg = handler.obtainMessage(TEXT_UPDATE,textUpdate);
-                                        textMsg.sendToTarget();
                                     }
+
+                                    //Record data into data array
+                                    //Min thresh, max thresh, max blob area, min repeatability, cell count
+                                    testData.add(new String[]{Double.toString(minThresh), Double.toString(maxThresh), Double.toString(maxBArea), Integer.toString(minRepeat), Integer.toString(cellCount)});
+
+                                    //Update loop count
+                                    loopCount += 1;
+
+                                    //Update UI
+                                    textUpdate = "Processing Iteration: " + loopCount;
+                                    textMsg = handler.obtainMessage(TEXT_UPDATE,textUpdate);
+                                    textMsg.sendToTarget();
                                 }
                             }
                         }
@@ -296,15 +344,21 @@ public class flowCountActivity extends ActionBarActivity {
                 }
                 //If not, just do a one-off calculation
                 else {
-                    //(Optional) Write parameters first
-                    createParams(blobThresh[0],100,120,2,15,imgPath);
+                    //Get shared params_pref from base context
+                    sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+                    //Write bloblparams.xml using sharedpreferences
+                    int thresholdStep = sharedPref.getInt("s_thresholdstep",1);   //Threshold step
+                    int minThreshold = sharedPref.getInt("s_minthreshold",1); //Min pixel value
+                    int maxThreshold = sharedPref.getInt("s_maxthreshold",1); //Max pixel value
+                    int minRepeatability = sharedPref.getInt("s_minrepeatability",1); //Min repeatability
+                    int maxArea = sharedPref.getInt("s_maxarea",1);   //Max blob area
+                    createParams(thresholdStep,minThreshold,maxThreshold,minRepeatability,maxArea,imgPath);
+                    //createParams(blobThresh[0],100,120,2,15,imgPath);
 
                     //Try to read parameters
                     detector.read(imgPath + "/BlobParams.xml");
                     Log.d(TAG,"Attempted to read parameters"); //Add entry to log
-
-                    //Write current parameters to double-check
-                    //detector.write(imgPath + "/RealParams.xml");
 
                     //Detect using parameters
                     detector.detect(testMat, keypoints);
@@ -313,6 +367,13 @@ public class flowCountActivity extends ActionBarActivity {
                     //Draw new image with keypoints
                     outImg = testMat.clone();
                     Features2d.drawKeypoints(testMat,keypoints,outImg);
+
+                    //Send parameters to debug text view
+                    if(debugFlag){
+                        textUpdate = "tStep: " + thresholdStep + ", minT: " + minThreshold + ", maxT: " + maxThreshold + ", minR: " + minRepeatability + ", area: " + maxArea;
+                        debugMsg = handler.obtainMessage(DEBUG_MSG,textUpdate);
+                        debugMsg.sendToTarget();
+                    }
 
                     //Send output image with keypoints to imageview
                     resultMsg = handler.obtainMessage(IMG_UPDATE,outImg);
@@ -326,9 +387,6 @@ public class flowCountActivity extends ActionBarActivity {
                     textUpdate = "Cell count: " + cellCount;
                     textMsg = handler.obtainMessage(TEXT_UPDATE,textUpdate);
                     textMsg.sendToTarget();
-
-                    //Set save image button to be visible
-                    saveButton.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -338,13 +396,22 @@ public class flowCountActivity extends ActionBarActivity {
         processThread.start();
     }
 
-    //Function to decode video file
+    //Method to decode video file
     public void decodeVideo(final Uri videoUri){
+        //Get shared preferences from file
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String x1 = sharedPref.getString("s_x1","498");
+        String x2 = sharedPref.getString("s_x2","540");
+        String y = sharedPref.getString("s_y","339");
+        String sBinNum = sharedPref.getString("s_bin","1");
+        final int binNum = Integer.parseInt(sBinNum);
+        final int[] coords = {Integer.parseInt(x1),Integer.parseInt(x2),Integer.parseInt(y)};
+
         Runnable decodeRunnable = new Runnable() {
             @Override
             public void run() {
                 //Create DecodeVideo and its wrapper
-                DecodeVideo decodeVideo = new DecodeVideo(imgFile,videoUri,getBaseContext(),handler, combinedMat);
+                DecodeVideo decodeVideo = new DecodeVideo(imgFile,videoUri,getBaseContext(),handler, combinedMat, binNum, coords);
                 decodeVideo.callWrapper();
             }
         };
@@ -354,7 +421,7 @@ public class flowCountActivity extends ActionBarActivity {
         wrapperThread.start();
     }
 
-    //Function to create parameters file
+    //Method to create parameters file
     public void createParams(double thresholdStep, double minThreshold, double maxThreshold, int minRepeatability, double maxArea, String filePath) {
 
         //Default parameters for blob detector
@@ -502,7 +569,7 @@ public class flowCountActivity extends ActionBarActivity {
     }
 
 
-    //Function to save output image from ImageView
+    //Method to save output image from ImageView
     public void saveImage(View view){
         //Create file directory
         resultsFile.mkdirs();
@@ -549,5 +616,30 @@ public class flowCountActivity extends ActionBarActivity {
         }
 
         return result;
+    }
+
+    //Method to re-analyse the image using updated parameters
+    public void recountImg(View view) {
+        //Add entry to log
+        Log.d(TAG,"Recounting cells with new parameters");
+
+        //Reset visibility
+        recountButton.setVisibility(View.INVISIBLE);
+        saveButton.setVisibility(View.INVISIBLE);
+
+        //Re-obtain loop flag from settings
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        loopFlag = sharedPref.getBoolean("s_loopflag",false);
+
+        //Run blob detector
+        processVideo(combinedMat, loopFlag, true); //True for loop, false for one-time
+
+        //Set recount button to be visible after completion
+        recountButton.setVisibility(View.VISIBLE);
+
+        //Set save image button to be visible if not looping
+        if (!loopFlag) {
+            saveButton.setVisibility(View.VISIBLE);
+        }
     }
 }

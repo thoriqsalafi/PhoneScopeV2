@@ -11,6 +11,7 @@ import org.opencv.android.OpenCVLoader;
 
 public class processing extends ActionBarActivity {
 
+
     //Declare fields
     private static int SELECT_IMAGE = 1;
     private static int OPTIMISE_IMAGE = 2;
@@ -53,13 +54,14 @@ public class processing extends ActionBarActivity {
     //Runs after an image is selected
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        //If image is selected and everything is ok
-         if (requestCode == FLOW_COUNT && resultCode == RESULT_OK){
+        //If video is selected and everything is ok
+        if (requestCode == FLOW_COUNT && resultCode == RESULT_OK){
             //Get image data
             Uri selectedImage = data.getData();
 
             //Start new activity to process image
-            Intent intent = new Intent(this,flowCountActivity.class);
+            //Intent intent = new Intent(this,FlowCountActivity.class);
+            Intent intent = new Intent(this,AreaSelectActivity.class);
             intent.putExtra("videoPath",selectedImage);
             startActivity(intent);
 
@@ -76,3 +78,4 @@ public class processing extends ActionBarActivity {
 
     }
 }
+

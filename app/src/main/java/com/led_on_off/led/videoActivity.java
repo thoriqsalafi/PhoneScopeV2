@@ -23,6 +23,7 @@ public class videoActivity extends ActionBarActivity {
     private String imgPath = imgFile.getPath();
 
     ImageView imageView;
+    Mat combinedMat;    //Matrix to store the combined imaged to be further tested
 
     private static int PROCESS_INCOMPLETE = 0;
     private static int IMG_UPDATE = 1;
@@ -41,6 +42,10 @@ public class videoActivity extends ActionBarActivity {
         //Set ImageView and TextView
         imageView = (ImageView) findViewById(R.id.videoImage);
 
+        //Create matrix to hold combined image
+        combinedMat = new Mat();
+
+        //Run decode
         decodeVideo(videoUri);
     }
 
@@ -49,7 +54,7 @@ public class videoActivity extends ActionBarActivity {
         @Override
         public void handleMessage(Message msg) {
             //If message status is complete, run the updateImage method
-            if(msg.what == COMBINE_FRAME) {
+            if (msg.what == IMG_UPDATE){
                 if(msg.obj instanceof Mat){
                     //Get matrix from message
                     Mat img = (Mat) msg.obj;
@@ -74,6 +79,14 @@ public class videoActivity extends ActionBarActivity {
                     Log.i(TAG, "Updated image view with bitmap");
                 }
             }
+            else if(msg.what == COMBINE_FRAME) {
+                //Convert mat into bitmap
+                Bitmap combinedBmp = Bitmap.createBitmap(combinedMat.cols(), combinedMat.rows(), Bitmap.Config.ARGB_8888);
+                Utils.matToBitmap(combinedMat, combinedBmp);
+
+                //Set bitmap to image view
+                imageView.setImageBitmap(combinedBmp);
+            }
         }
     };
 
@@ -83,7 +96,7 @@ public class videoActivity extends ActionBarActivity {
             @Override
             public void run() {
                 //Create DecodeVideo and its wrapper
-                DecodeVideo decodeVideo = new DecodeVideo(imgFile,videoUri,getBaseContext(),handler);
+                DecodeVideo decodeVideo = new DecodeVideo(imgFile,videoUri,getBaseContext(),handler,combinedMat);
                 decodeVideo.callWrapper();
             }
         };

@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Surface;
 
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
@@ -34,6 +35,8 @@ import java.nio.FloatBuffer;
  * Created by thoriqsalafi on 19/1/17.
  */
 //Class to decode video
+
+//Class to decode video
 public class DecodeVideo {
     //Initialise fields
     private final static String TAG = "Class::DecodeVideo"; //Tag for logging purposes
@@ -43,6 +46,8 @@ public class DecodeVideo {
     private Uri mVideoUri;  //Uri for selected video
     private Handler mHandler;   //Handler to update the main UI thread
     private Mat mCombinedMat;   //Matrix that stores the consolidated image
+    private int mBinNum;    //Number of rows of pixels to combine
+    private int[] mCoords;  //Array of coordinates for ROI
 
     private String mimeFormat;  //String to store video MIME format
     private int vWidth; //Video width
@@ -89,27 +94,32 @@ public class DecodeVideo {
     }
 
     //Constructor for DecodeVideo (with OpenCV matrix)
+    public DecodeVideo(File videoFile, Uri videoUri, Context runContext, Handler handler, Mat combinedMat, int binNum, int[] coords){
+        mVideoFile = videoFile; //File directory
+        mVideoUri = videoUri;   //Uri for selected video
+        mContext = runContext;  //Context for MediaExtractor
+        mHandler = handler; //Handler for main UI thread
+        mCombinedMat = combinedMat; //Matrix to hold consolidated image
+        mBinNum = binNum;   //Number of pixel rows to combine
+        mCoords = coords;   //Preferences from settings
+        mBufferInfo = new MediaCodec.BufferInfo();  //Create new buffer info
+        Log.d(TAG,"Initialised DecodeVideo fields");
+    }
+
+
+    //Constructor for DecodeVideo (without OpenCV matrix)
     public DecodeVideo(File videoFile, Uri videoUri, Context runContext, Handler handler, Mat combinedMat){
         mVideoFile = videoFile; //File directory
         mVideoUri = videoUri;   //Uri for selected video
         mContext = runContext;  //Context for MediaExtractor
         mHandler = handler; //Handler for main UI thread
         mCombinedMat = combinedMat; //Matrix to hold consolidated image
+        int[] coords = {-1,-1,-1};  //Set to -1 to ignore coordinates
+        mCoords = coords;   //Preferences from settings
+        mBinNum = 1;   //Number of pixel rows to combine, default = 1
         mBufferInfo = new MediaCodec.BufferInfo();  //Create new buffer info
         Log.d(TAG,"Initialised DecodeVideo fields");
     }
-
-    //Constructor for DecodeVideo (without OpenCV matrix)
-    public DecodeVideo(File videoFile, Uri videoUri, Context runContext, Handler handler){
-        mVideoFile = videoFile; //File directory
-        mVideoUri = videoUri;   //Uri for selected video
-        mContext = runContext;  //Context for MediaExtractor
-        mHandler = handler; //Handler for main UI thread
-        mBufferInfo = new MediaCodec.BufferInfo();  //Create new buffer info
-        Log.d(TAG,"Initialised DecodeVideo fields");
-    }
-
-
 
     //Method to decode the video
     public void decode(){
@@ -134,7 +144,7 @@ public class DecodeVideo {
             Log.d(TAG,"Video dimensions: " + vWidth + "x" + vHeight);
 
             //Create custom output surface
-            outputSurface = new CodecOutputSurface(vWidth,vHeight,mHandler,mCombinedMat);
+            outputSurface = new CodecOutputSurface(vWidth,vHeight,mHandler,mCombinedMat,mBinNum,mCoords);
 
             //Extract MIME format
             mimeFormat = format.getString(MediaFormat.KEY_MIME);
@@ -285,10 +295,8 @@ public class DecodeVideo {
         private EGLSurface mEGLSurface = EGL14.EGL_NO_SURFACE;
         int mWidth;
         int mHeight;
-
-        //Default settings for target location (hardcoded for now)
-        int[] xCoords = {498,540};  //3rd column from left
-        int yCoord = 339;   //Near the edge
+        int mBinNum;
+        int[] mCoords;
 
         private Handler mHandler;
 
@@ -298,7 +306,7 @@ public class DecodeVideo {
         private ByteBuffer mPixelBuf;                       // used by saveFrame() and combineFrame()
 
         //Constructor for CodecOutputSurface, creates a surface for MediaCodec
-        public CodecOutputSurface(int width, int height, Handler handler, Mat combinedMat) {
+        public CodecOutputSurface(int width, int height, Handler handler, Mat combinedMat, int binNum, int[] coords) {
             if (width <= 0 || height <= 0) {
                 throw new IllegalArgumentException();
             }
@@ -306,6 +314,8 @@ public class DecodeVideo {
             mHeight = height;
             mHandler = handler;
             mCombinedMat = combinedMat;
+            mBinNum = binNum;
+            mCoords = coords;
 
             eglSetup();     //Setup EGL (interface between OpenGL and Android
             makeCurrent();  //Make the surface current
@@ -324,7 +334,7 @@ public class DecodeVideo {
             mSurfaceTexture = new SurfaceTexture(mTextureRender.getTextureId());
             mSurfaceTexture.setOnFrameAvailableListener(this);  //Set listener to this instance
 
-            //Create a new instace of Surface using the SurfaceTexture
+            //Create a new instance of Surface using the SurfaceTexture
             mSurface = new Surface(mSurfaceTexture);
 
             //Allocate buffer
@@ -478,12 +488,21 @@ public class DecodeVideo {
                 Mat frameMat = new Mat();
                 Utils.bitmapToMat(bmp,frameMat);
 
-                //Combine frame into the final image
-                combineImg(frameMat, mCombinedMat);
+                //If mCoords is negative, do not combine
+                if(mCoords[0] == -1){
+                    mCombinedMat = new Mat();
+                    mCombinedMat = frameMat.clone();
 
-                //Update main thread
-                Message updateMsg = mHandler.obtainMessage(COMBINE_FRAME);
-                updateMsg.sendToTarget();
+                    Message updateMsg = mHandler.obtainMessage(IMG_UPDATE,frameMat);
+                    updateMsg.sendToTarget();
+                } else {
+                    //Combine frame into the final image
+                    combineImg(frameMat, mCombinedMat, mBinNum);
+
+                    //Update main thread
+                    Message updateMsg = mHandler.obtainMessage(COMBINE_FRAME);
+                    updateMsg.sendToTarget();
+                }
             } finally {
                 Log.d(TAG,"Bitmap successfully generated");
             }
@@ -498,15 +517,49 @@ public class DecodeVideo {
         }
 
         //Function to add current data into consolidated image
-        public void combineImg(Mat frameMat, Mat targetMat)
+        public void combineImg(Mat frameMat, Mat targetMat, int binNum)
         {
-            //Obtain region of interest around selected pixels
-            Rect roi = new Rect(xCoords[0],yCoord,xCoords[1] - xCoords[0] + 1,1);
-            Mat frameROI = new Mat(frameMat,roi);
+            //Declare fields
+            Rect roi;
+            Mat frameROI;
 
-            //Push frameROI as an additional row
-            targetMat.push_back(frameROI);
-            Log.v(TAG,"New height: " + targetMat.height());
+            //If only one row
+            if(binNum == 1) {
+                //Obtain region of interest around selected pixels
+                roi = new Rect(mCoords[0], mCoords[2], mCoords[1] - mCoords[0] + 1, 1);
+                frameROI = new Mat(frameMat, roi);
+
+                //Push frameROI as an additional row
+                targetMat.push_back(frameROI);
+                Log.v(TAG, "New height: " + targetMat.height());
+            }
+            //If not, combine multiple rows
+            else if (binNum > 1) {
+                //Declare holding frame
+                Mat holdingFrame = new Mat();
+
+                //Loop through bin number to get regions of interest
+                for (int i = 0; i < binNum; i++){
+                    //Obtain region of interest around selected pixels
+                    roi = new Rect(mCoords[0], mCoords[2] - i, mCoords[1] - mCoords[0] + 1, 1);
+                    frameROI = new Mat(frameMat, roi);
+
+                    //Combine regions of interest if not the first iteration
+                    if (i == 0){
+                        holdingFrame = frameROI.clone();
+                        Log.d(TAG,"Created holding frame");
+                    } else {
+                        //Combine pixels
+                        //TODO: resolve saturation of pixels
+                        Core.add(holdingFrame,frameROI,holdingFrame);
+                        Log.v(TAG,"Added ROI " + i + " to holding frame");
+                    }
+                }
+
+                //Push frameROI as an additional row
+                targetMat.push_back(holdingFrame);
+                Log.v(TAG, "New height: " + targetMat.height());
+            }
         }
     }
 
@@ -726,4 +779,5 @@ public class DecodeVideo {
         }
     }
 }
+
 

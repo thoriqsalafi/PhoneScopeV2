@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/coordinates">
+        <EditTextPreference
+            android:key="s_x1"
+            android:title="@string/x_coord1"
+            android:defaultValue="498"
+            android:persistent="true"
+            />
+        <EditTextPreference
+            android:key="s_x2"
+            android:title="@string/x_coord2"
+            android:defaultValue="540"
+            android:persistent="true"
+            />
+        <EditTextPreference
+            android:key="s_y"
+            android:title="@string/y_coord"
+            android:defaultValue="339"
+            android:persistent="true"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/bin_num">
+        <ListPreference
+            android:key="s_bin"
+            android:title="@string/bin_num"
+            android:entries="@array/binvalues"
+            android:entryValues="@array/binvalues"
+            android:defaultValue="1"
+            android:persistent="true"/>
+    </PreferenceCategory>
+</PreferenceScreen>

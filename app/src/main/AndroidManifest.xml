@@ -9,6 +9,11 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -30,9 +35,6 @@
             android:name=".ledControl"
             android:label="LED Control" />
         <activity
-            android:name=".AboutActivity"
-            android:label="@string/title_activity_about" />
-        <activity
             android:name=".ledButton"
             android:label="@string/title_activity_led_button" />
         <activity android:name=".capturecamera" />
@@ -45,6 +47,12 @@
         <activity
             android:name=".result_Activity"
             android:label="@string/title_activity_result_" />
+        <activity
+            android:name=".AreaSelectActivity"
+            android:label="@string/title_activity_area_select" />
+        <activity
+            android:name=".NumberPickerPreference"
+            android:label="@string/title_activity_number_picker_preference"></activity>
     </application>
 
 </manifest>

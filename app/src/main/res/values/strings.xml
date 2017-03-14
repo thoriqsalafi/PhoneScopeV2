@@ -8,4 +8,46 @@
     <string name="title_activity_led_button">ledButton</string>
     <string name="title_activity_processing">processing</string>
     <string name="title_activity_result_">result_Activity</string>
+
+    <string name="takephoto_button">Take Photo</string>
+    <string name="process_button">Process Image</string>
+    <string name="optimise_button">Optimise</string>
+    <string name="flowcount_button">Flow Count</string>
+    <string name="videotest_button">Test Video</string>
+    <string name="loading_text">Loading</string>
+    <string name="save_button">Save Image</string>
+    <string name="recount_button">Re-count</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="preview">Preview</string>
+    <string name="coordinates">Pixel Coordinates</string>
+    <string name="x_coord1">X1</string>
+    <string name="x_coord2">X2</string>
+    <string name="y_coord">Y</string>
+    <string name="bin_num">Bin Number</string>
+
+    <string name="s_cat1">Parameters</string>
+    <string name="s_thresholdstep">Threshold Step</string>
+    <string name="s_minthreshold">Minimum Threshold</string>
+    <string name="s_maxthreshold">Maximum Threshold</string>
+    <string name="s_minrepeatability">Minimum Repeatability</string>
+    <string name="s_maxarea">Maximum Area</string>
+    <string name="s_cat2">Optimisation</string>
+    <string name="s_loopflag">Loop</string>
+    <string name="title_activity_area_select">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_number_picker_preference">NumberPickerPreference</string>
 </resources>

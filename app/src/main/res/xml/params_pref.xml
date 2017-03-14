@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/s_cat1">
+        <com.led_on_off.led.NumberPickerPreference
+            android:key="s_thresholdstep"
+            android:title="@string/s_thresholdstep"
+            android:defaultValue="5"
+            android:persistent="true"
+            />
+        <com.led_on_off.led.NumberPickerPreference
+            android:key="s_minthreshold"
+            android:title="@string/s_minthreshold"
+            android:defaultValue="90"
+            android:persistent="true"
+            />
+        <com.led_on_off.led.NumberPickerPreference
+            android:key="s_maxthreshold"
+            android:title="@string/s_maxthreshold"
+            android:defaultValue="120"
+            android:persistent="true"
+            />
+        <com.led_on_off.led.NumberPickerPreference
+            android:key="s_minrepeatability"
+            android:title="@string/s_minrepeatability"
+            android:defaultValue="2"
+            android:persistent="true"
+            />
+        <com.led_on_off.led.NumberPickerPreference
+            android:key="s_maxarea"
+            android:title="@string/s_maxarea"
+            android:defaultValue="30"
+            android:persistent="true"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/s_cat2">
+        <SwitchPreference
+            android:key="s_loopflag"
+            android:title="@string/s_loopflag"
+            android:defaultValue="false"
+            android:persistent="true"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

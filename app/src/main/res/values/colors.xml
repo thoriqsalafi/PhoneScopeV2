@@ -5,4 +5,10 @@
     <color name="blue">#58ACFA</color>
     <color name="yellow">#D7DF01</color>
     <color name="grey">#6E6E6E</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorBg">#000000</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>
