@@ -35,7 +35,7 @@ public class DeviceList extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_list);
 
-        //Calling widgets
+        //Calling widgetss
         btnPaired = (Button)findViewById(R.id.button);
         devicelist = (ListView)findViewById(R.id.listView);
 
