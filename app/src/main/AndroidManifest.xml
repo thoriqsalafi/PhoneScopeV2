@@ -52,7 +52,12 @@
             android:label="@string/title_activity_area_select" />
         <activity
             android:name=".NumberPickerPreference"
-            android:label="@string/title_activity_number_picker_preference"></activity>
+            android:label="@string/title_activity_number_picker_preference" />
+        <activity
+            android:name=".actionBar"
+            android:label="@string/title_activity_action_bar" />
+        <activity android:name=".videoBar" />
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.led_on_off.led.actionBar"
+    android:background="@color/colorWhite">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/topBar"
+            android:background="@drawable/white_grey_border_bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text = "IMAGE CAPTURE"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-smallcaps" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottomBar2"
+            android:layout_below="@+id/topBar">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button3"
+                android:text="Snap Photo"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:background="@drawable/buttonbackground"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView4"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/bottomBar2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true">
+
+            <android.support.design.widget.BottomNavigationView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/bottomNavView_Bar"
+                app:itemIconTint="@drawable/bottom_navigation_selector"
+                android:background="@drawable/white_grey_border_top"
+                app:menu="@menu/bottom_navigation_menu">
+            </android.support.design.widget.BottomNavigationView>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

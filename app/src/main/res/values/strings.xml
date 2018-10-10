@@ -50,4 +50,5 @@
         completions."
     </string>
     <string name="title_activity_number_picker_preference">NumberPickerPreference</string>
+    <string name="title_activity_action_bar">actionBar</string>
 </resources>

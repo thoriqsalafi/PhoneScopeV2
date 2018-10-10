@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/ic_arrow"
+        android:icon="@drawable/ic_arrow_back"
+        android:title="Setup"
+        />
+
+    <item
+        android:id="@+id/ic_android"
+        android:icon="@drawable/ic_android"
+        android:title="Camera"
+        />
+    <item
+        android:id="@+id/ic_books"
+        android:icon="@drawable/ic_library_books"
+        android:title="Video"
+        />
+    <item
+        android:id="@+id/ic_center_focus"
+        android:icon="@drawable/ic_center_focus"
+        android:title="Analysis"
+        />
+    <item
+        android:id="@+id/ic_backup"
+        android:icon="@drawable/ic_backup"
+        android:title="About"
+        />
+
+
+
+
+</menu>
