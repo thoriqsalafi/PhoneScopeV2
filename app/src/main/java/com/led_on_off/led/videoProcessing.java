@@ -140,7 +140,7 @@ public class videoProcessing extends AppCompatActivity {
 
     }
 
-    //Choose video to initiate flow count
+    //Choose video to initiate flowcount
     public void flowCount(View view){
         //Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
