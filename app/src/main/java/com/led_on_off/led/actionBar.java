@@ -68,6 +68,8 @@ public class actionBar extends ActionBarActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.ic_arrow:
+                        Intent intent1 = new Intent(actionBar.this, MainActivity.class);
+                        startActivity(intent1);
 
                         break;
 
@@ -81,10 +83,14 @@ public class actionBar extends ActionBarActivity {
                         break;
 
                     case R.id.ic_center_focus:
+                        Intent intent4 = new Intent(actionBar.this, videoProcessing.class);
+                        startActivity(intent4);
 
                         break;
 
                     case R.id.ic_backup:
+                        Intent intent5 = new Intent(actionBar.this, aboutInformation.class);
+                        startActivity(intent5);
 
                         break;
                 }

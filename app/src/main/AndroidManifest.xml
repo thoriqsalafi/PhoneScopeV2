@@ -57,7 +57,9 @@
             android:name=".actionBar"
             android:label="@string/title_activity_action_bar" />
         <activity android:name=".videoBar" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".aboutInformation" />
+        <activity android:name=".videoProcessing"></activity>
     </application>
 
 </manifest>

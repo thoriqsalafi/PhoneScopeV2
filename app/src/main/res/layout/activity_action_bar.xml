@@ -42,11 +42,21 @@
             android:layout_above="@+id/bottomBar2"
             android:layout_below="@+id/topBar">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/imageView4"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/button3"
+                android:src="@drawable/imagecamera2"/>
+
+
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button3"
-                android:text="Snap Photo"
+                android:text="Take Photo"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:textSize="20sp"
@@ -56,13 +66,6 @@
                 android:shadowDx="0"
                 android:shadowDy="0"
                 android:shadowRadius="5"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/imageView4"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
 
 
         </RelativeLayout>

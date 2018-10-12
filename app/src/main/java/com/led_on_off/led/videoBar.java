@@ -57,10 +57,14 @@ public class videoBar extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.ic_arrow:
+                        Intent intent1 = new Intent(videoBar.this, MainActivity.class);
+                        startActivity(intent1);
 
                         break;
 
                     case R.id.ic_android:
+                        Intent intent2 = new Intent(videoBar.this, actionBar.class);
+                        startActivity(intent2);
 
                         break;
 
@@ -69,10 +73,14 @@ public class videoBar extends AppCompatActivity {
                         break;
 
                     case R.id.ic_center_focus:
+                        Intent intent4 = new Intent(videoBar.this, videoProcessing.class);
+                        startActivity(intent4);
 
                         break;
 
                     case R.id.ic_backup:
+                        Intent intent5 = new Intent(videoBar.this, aboutInformation.class);
+                        startActivity(intent5);
 
                         break;
                 }
@@ -92,6 +100,7 @@ public class videoBar extends AppCompatActivity {
         if(requestCode == ACTIVITY_START_CAMERA_APP && resultCode == RESULT_OK) {
             Uri videoUri = data.getData();
             mVideoView.setVideoURI(videoUri);
+            mVideoView.seekTo(100);
 
         }
     }

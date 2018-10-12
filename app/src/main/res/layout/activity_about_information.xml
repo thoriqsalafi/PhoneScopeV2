@@ -20,10 +20,14 @@
             android:id="@+id/topBar"
             android:background="@drawable/white_grey_border_bottom">
 
+
+
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text = "SETUP ACCESSORY"
+                android:text = "ABOUT"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/black"
@@ -31,7 +35,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-smallcaps" />
-
 
         </RelativeLayout>
 
@@ -45,12 +48,23 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/instruction"
-                android:id="@+id/imageView5" />
+                android:src="@drawable/logo2"
+                android:layout_above="@+id/aboutText"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text = "This App is version 2.0 Developed at Cellular and Molecular Bioengineering Lab"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:layout_gravity="center_horizontal"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-smallcaps"
+                android:id="@+id/aboutText"/>
 
         </RelativeLayout>
-
-
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -23,7 +23,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text = "SETUP ACCESSORY"
+                android:text = "VIDEO ANALYSIS"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/black"
@@ -35,6 +35,9 @@
 
         </RelativeLayout>
 
+
+
+
         <RelativeLayout
             android:layout_below="@+id/topBar"
             android:layout_above="@+id/bottomBar"
@@ -45,11 +48,65 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/instruction"
-                android:id="@+id/imageView5" />
+                android:id="@+id/imageView5"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/pixel" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pixel"
+                android:id="@+id/pixel"
+                android:textColor="@color/black"
+                android:layout_above="@+id/RGBanalyzer"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="pixel2"
+                android:id="@+id/pixel2"
+                android:textColor="@color/black"
+                android:layout_above="@+id/RGBanalyzer"
+                android:layout_alignParentRight="true"/>
+
+
+            <Button
+                android:text="RGB analyzer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/RGBanalyzer"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:background="@drawable/buttonbackground"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"/>
+
+            <Button
+                android:text="Flow Count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/flowcount_button"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:maxLines="1"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:background="@drawable/buttonbackground"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"/>
+
+
 
         </RelativeLayout>
-
 
 
         <RelativeLayout
